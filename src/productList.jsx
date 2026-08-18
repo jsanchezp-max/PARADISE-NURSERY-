@@ -1,15 +1,18 @@
-  import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from './cartSlice';
 import CartItem from './CartItem';
 import './ProductList.css';
 
-function ProductList() {
+function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [addedToCart, setAddedToCart] = useState({});
     const dispatch = useDispatch();
+    
+    // Obtiene los artículos del carrito desde Redux
     const cartItems = useSelector((state) => state.cart.items);
 
+    // Calcula el número total de artículos en el carrito dinámicamente
     const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     const plantsArray = [
@@ -20,37 +23,37 @@ function ProductList() {
                     name: "Lirio de la Paz",
                     image: "https://cdn.pixabay.com/photo/2019/06/12/14/14/peace-lily-4269365_1280.jpg",
                     description: "Elimina esporas de moho y purifica el aire.",
-                    cost: "$18000"
+                    cost: "$18"
                 },
                 {
                     name: "Planta de Serpiente",
                     image: "https://cdn.pixabay.com/photo/2021/01/22/06/04/snake-plant-5939187_1280.jpg",
                     description: "Produce oxígeno de noche y requiere poca agua.",
-                    cost: "$10000"
+                    cost: "$12"
                 },
                 {
                     name: "Helecho de Boston",
                     image: "https://cdn.pixabay.com/photo/2020/04/30/19/52/boston-fern-5114414_1280.jpg",
                     description: "Aumenta la humedad y filtra contaminantes.",
-                    cost: "$15000"
+                    cost: "$15"
                 },
                 {
                     name: "Poto Dorado",
                     image: "https://cdn.pixabay.com/photo/2018/11/15/10/32/plants-3816942_1280.jpg",
                     description: "Muy resistente e ideal para interiores oscuros.",
-                    cost: "$10000"
+                    cost: "$10"
                 },
                 {
                     name: "Planta Araña",
                     image: "https://cdn.pixabay.com/photo/2014/12/10/06/00/spider-plant-562723_1280.jpg",
                     description: "Fácil de cuidar, excelente para principiantes.",
-                    cost: "$14000"
+                    cost: "$14"
                 },
                 {
                     name: "Aglaonema",
                     image: "https://cdn.pixabay.com/photo/2020/07/21/16/24/aglaonema-5426750_1280.jpg",
                     description: "Hojas llamativas y tolerante a poca luz.",
-                    cost: "$22000"
+                    cost: "$22"
                 }
             ]
         },
@@ -61,42 +64,43 @@ function ProductList() {
                     name: "Lavanda",
                     image: "https://images.unsplash.com/photo-1611909023032-2d6b3134ecba",
                     description: "Aroma relajante que reduce el estrés.",
-                    cost: "$10000"
+                    cost: "$10"
                 },
                 {
                     name: "Jazmín",
                     image: "https://images.unsplash.com/photo-1592729808609-497013774414",
                     description: "Flores fragantes de aroma dulce.",
-                    cost: "$18000"
+                    cost: "$18"
                 },
                 {
                     name: "Romero",
                     image: "https://cdn.pixabay.com/photo/2017/05/11/19/44/rosemary-2305091_1280.jpg",
                     description: "Fragancia estimulante y uso culinario.",
-                    cost: "$12000"
+                    cost: "$12"
                 },
                 {
                     name: "Menta",
                     image: "https://cdn.pixabay.com/photo/2016/01/27/18/30/mint-1165030_1280.jpg",
                     description: "Aroma fresco y excelente para infusiones.",
-                    cost: "$8000"
+                    cost: "$8"
                 },
                 {
                     name: "Albahaca",
                     image: "https://cdn.pixabay.com/photo/2016/07/22/16/33/basil-1535182_1280.jpg",
                     description: "Olor dulce y perfecta para la cocina.",
-                    cost: "$9000"
+                    cost: "$9"
                 },
                 {
                     name: "Aloe Vera",
                     image: "https://cdn.pixabay.com/photo/2018/04/02/18/18/aloe-vera-3284710_1280.jpg",
                     description: "Propiedades calmantes para la piel.",
-                    cost: "$14000"
+                    cost: "$14"
                 }
             ]
         }
     ];
 
+    // Añade el producto a Redux y desactiva el botón
     const handleAddToCart = (plant) => {
         dispatch(addItem(plant));
         setAddedToCart((prevState) => ({
@@ -110,54 +114,66 @@ function ProductList() {
         setShowCart(true);
     };
 
-    const handleContinueShopping = (e) => {
+    const handlePlantsClick = (e) => {
         e.preventDefault();
         setShowCart(false);
     };
 
     return (
         <div>
-            <div className="navbar" style={{ backgroundColor: '#4CAF50', color: '#fff', padding: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div className="tag">
+            {/* BARRA DE NAVEGACIÓN */}
+            <div className="navbar" style={{ backgroundColor: '#4CAF50', color: '#fff', padding: '15px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="tag" onClick={onHomeClick} style={{ cursor: 'pointer' }}>
                     <div className="luxury">
-                        <h2>Paradise Nursery</h2>
+                        <h2 style={{ margin: 0 }}>Paradise Nursery</h2>
                         <i style={{ fontSize: '14px' }}>Donde el verde encuentra el hogar</i>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                    <a href="#plants" onClick={(e) => { e.preventDefault(); setShowCart(false); }} style={{ color: 'white', fontSize: '20px', textDecoration: 'none' }}>Plantas</a>
-                    <a href="#cart" onClick={(e) => handleCartClick(e)} style={{ color: 'white', fontSize: '20px', textDecoration: 'none', position: 'relative' }}>
-                        <h1 className="cart" style={{ margin: 0 }}>🛒 {totalQuantity > 0 && <span className="cart_quantity_count">{totalQuantity}</span>}</h1>
+                <div style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
+                    <a href="#" onClick={onHomeClick} style={{ color: 'white', fontSize: '18px', textDecoration: 'none' }}>Inicio</a>
+                    <a href="#plants" onClick={handlePlantsClick} style={{ color: 'white', fontSize: '18px', textDecoration: 'none' }}>Plantas</a>
+                    <a href="#cart" onClick={handleCartClick} style={{ color: 'white', fontSize: '20px', textDecoration: 'none', position: 'relative' }}>
+                        <h1 className="cart" style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
+                            🛒 
+                            <span className="cart_quantity_count" style={{ marginLeft: '5px', fontSize: '18px', backgroundColor: '#e53935', borderRadius: '50%', padding: '2px 8px' }}>
+                                {totalQuantity}
+                            </span>
+                        </h1>
                     </a>
                 </div>
             </div>
 
+            {/* PRODUCTOS O CARRITO */}
             {!showCart ? (
                 <div className="product-grid" style={{ padding: '20px' }}>
                     {plantsArray.map((category, index) => (
                         <div key={index}>
-                            <h1 style={{ textAlign: 'center', margin: '20px 0' }}>{category.category}</h1>
-                            <div className="product-list" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
+                            <h1 style={{ textAlign: 'center', margin: '30px 0' }}>{category.category}</h1>
+                            <div className="product-list" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '25px' }}>
                                 {category.plants.map((plant, plantIndex) => (
-                                    <div className="product-card" key={plantIndex} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '15px', width: '250px', textAlign: 'center' }}>
-                                        <img className="product-image" src={plant.image} alt={plant.name} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '5px' }} />
+                                    <div className="product-card" key={plantIndex} style={{ border: '1px solid #ddd', borderRadius: '10px', padding: '15px', width: '260px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+                                        <img className="product-image" src={plant.image} alt={plant.name} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '8px' }} />
                                         <div className="product-title" style={{ fontWeight: 'bold', fontSize: '18px', margin: '10px 0' }}>{plant.name}</div>
-                                        <div className="product-description">{plant.description}</div>
-                                        <div className="product-cost" style={{ fontWeight: 'bold', margin: '10px 0' }}>{plant.cost}</div>
+                                        <div className="product-description" style={{ fontSize: '14px', color: '#555', height: '40px' }}>{plant.description}</div>
+                                        <div className="product-cost" style={{ fontWeight: 'bold', margin: '10px 0', fontSize: '16px' }}>{plant.cost}</div>
+                                        
+                                        {/* BOTÓN CON ESTADO DESACTIVADO */}
                                         <button 
                                             className="product-button" 
                                             onClick={() => handleAddToCart(plant)}
                                             disabled={addedToCart[plant.name]}
                                             style={{
-                                                backgroundColor: addedToCart[plant.name] ? '#ccc' : '#4CAF50',
+                                                backgroundColor: addedToCart[plant.name] ? '#9e9e9e' : '#4CAF50',
                                                 color: 'white',
                                                 border: 'none',
                                                 padding: '10px 15px',
                                                 cursor: addedToCart[plant.name] ? 'not-allowed' : 'pointer',
-                                                borderRadius: '5px'
+                                                borderRadius: '5px',
+                                                width: '100%',
+                                                fontWeight: 'bold'
                                             }}
                                         >
-                                            {addedToCart[plant.name] ? "Añadido al carrito" : "Añadir al carrito"}
+                                            {addedToCart[plant.name] ? "Añadido al Carrito" : "Añadir al Carrito"}
                                         </button>
                                     </div>
                                 ))}
@@ -166,10 +182,10 @@ function ProductList() {
                     ))}
                 </div>
             ) : (
-                <CartItem onContinueShopping={handleContinueShopping} />
+                <CartItem onContinueShopping={handlePlantsClick} />
             )}
         </div>
     );
 }
 
-export default ProductList;         
+export default ProductList; 
